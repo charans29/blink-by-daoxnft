@@ -23,7 +23,7 @@ function BlinkCard() {
     useEffect(() => {
         if (isIframe() || typeof window !== 'undefined') {
             if (isIframe()) {
-                let client = new CanvasClient();
+                const client = new CanvasClient();
                 canvasClientRef.current = client;
                 setCanvasClient(client);
             }
