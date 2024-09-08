@@ -70,7 +70,7 @@ function BlinkCard() {
                 <>
                     <Blink stylePreset='custom' action={action} websiteText={websiteText} />
                     <p className="text-white font-mono">
-                        {canvasClient ? 'Canvas client initialized' : 'Blink...!'}
+                        {canvasClient ? 'Canvas client initialized' : ''}
                     </p>
                 </>
             )}
