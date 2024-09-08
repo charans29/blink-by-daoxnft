@@ -25,8 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <meta name="dscvr:canvas:version" content="vNext"/>
-      <meta name="og:image" content="cover.png"></meta>
+      <head>
+        <meta name="dscvr:canvas:version" content="vNext"/>
+        <meta name="og:image" content="cover.png"></meta>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

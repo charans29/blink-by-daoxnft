@@ -8,8 +8,16 @@ function BlinkCard() {
     const [action, setAction] = useState<Action | undefined>();
     const { isRegistryLoaded } = useActionsRegistryInterval();
 
+    const isIframe = () => {
+        try {
+          return window.self !== window.top;
+        } catch (e) {
+          return true;
+        }
+    };
+
     useEffect(() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' || isIframe()) {
             const urlParams = new URLSearchParams(window.location.search);
             const actionQuery = urlParams.get('action');
             if (actionQuery) {
