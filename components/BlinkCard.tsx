@@ -1,11 +1,12 @@
 "use client";
-import { Action, Blink } from "@dialectlabs/blinks";
+import { Action, Blink, useActionsRegistryInterval } from "@dialectlabs/blinks";
 import { useEffect, useState } from "react";
 import '@dialectlabs/blinks/index.css';
 
 function BlinkCard() {
     const [websiteText, setWebsiteText] = useState<string>("");
     const [action, setAction] = useState<Action | undefined>();
+    const { isRegistryLoaded } = useActionsRegistryInterval();
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -34,7 +35,7 @@ function BlinkCard() {
             padding: "10px",
             width: '100%'
         }}>
-            {action && (
+            {isRegistryLoaded && action && (
                 <>
                     <Blink stylePreset='custom' action={action} websiteText={websiteText} />
                 </>
