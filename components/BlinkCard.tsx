@@ -17,7 +17,7 @@ function BlinkCard() {
     };
 
     useEffect(() => {
-        if (typeof window !== 'undefined' || isIframe()) {
+        if (isIframe() || typeof window !== 'undefined') {
             const urlParams = new URLSearchParams(window.location.search);
             const actionQuery = urlParams.get('action');
             if (actionQuery) {
