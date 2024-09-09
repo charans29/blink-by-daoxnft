@@ -1,63 +1,70 @@
-"use client";
-import { Action, Blink, useActionsRegistryInterval } from "@dialectlabs/blinks";
-import { useEffect, useRef, useState } from "react";
+"use client"
+import React, { useEffect, useRef, useState } from "react";
 import '@dialectlabs/blinks/index.css';
+import { Action, Blink, useActionsRegistryInterval } from "@dialectlabs/blinks";
 import { CanvasClient } from "@dscvr-one/canvas-client-sdk";
 
 function BlinkCard() {
   const [websiteText, setWebsiteText] = useState<string>("");
-  const [action, setAction] = useState<Action | undefined>();
+  const [action, setAction] = useState<Action | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const { isRegistryLoaded } = useActionsRegistryInterval();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasClientRef = useRef<CanvasClient | undefined>();
-  const [canvasClient, setCanvasClient] = useState<CanvasClient | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const isIframe = () => {
-    try {
-      const iframeStatus = window.self !== window.top;
-      console.log("Is Iframe: ", iframeStatus);
-      return iframeStatus;
-    } catch (e) {
-      console.log("Iframe detection error: ", e);
-      return true;
-    }
-  };
+  const canvasClient = useRef<CanvasClient | null>(null);
 
   useEffect(() => {
-    if (window.self !== window.top || typeof window !== 'undefined') {
-      if (isIframe()) {
-        const client = new CanvasClient();
-        canvasClientRef.current = client;
-        setCanvasClient(client);
-      }
-      const resizeObserver = new ResizeObserver(() => {
-        canvasClientRef?.current?.resize();
-      });
-      if (containerRef.current) {
-        resizeObserver.observe(containerRef.current);
-      }
-      const urlParams = new URLSearchParams(window.location.href);
-      const actionQuery = urlParams.get('action');
-      if (actionQuery) {
-        const fetchData = async () => {
-          try {
-            const actionUrl = new URL(actionQuery);
-            setWebsiteText(actionUrl.hostname);
-            const action = await Action.fetch(actionQuery);
-            setAction(action);
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-        };
-        fetchData();
-      }
-      return () => {
-        if (containerRef.current) {
-          resizeObserver.unobserve(containerRef.current);
-        }
-      };
+    if (window.self !== window.top) {
+      canvasClient.current = new CanvasClient();
     }
   }, []);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(() => {
+     
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const actionQuery = urlParams.get('action');
+    
+    if (actionQuery) {
+      const fetchData = async () => {
+        try {
+          const actionUrl = new URL(actionQuery);
+          setWebsiteText(actionUrl.hostname);
+          const fetchedAction = await Action.fetch(actionQuery);
+          setAction(fetchedAction);
+        } catch (fetchError) {
+          console.error('Error fetching data:', fetchError);
+          setError('Failed to load Blink content.');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    } else {
+      setLoading(false);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        resizeObserver.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div
@@ -74,7 +81,7 @@ function BlinkCard() {
         <>
           <Blink stylePreset="custom" action={action} websiteText={websiteText} />
           <p className="text-white font-mono">
-            {canvasClient ? 'Canvas client initialized' : ''}
+            {canvasClient.current ? 'Canvas client initialized' : ''}
           </p>
         </>
       )}
