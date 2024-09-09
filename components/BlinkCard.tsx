@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import '@dialectlabs/blinks/index.css';
-import { Action, Blink, useActionsRegistryInterval } from "@dialectlabs/blinks";
+import { Action, Blink } from "@dialectlabs/blinks";
 import { CanvasClient } from "@dscvr-one/canvas-client-sdk";
 
 function BlinkCard() {
@@ -9,7 +9,6 @@ function BlinkCard() {
   const [action, setAction] = useState<Action | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { isRegistryLoaded } = useActionsRegistryInterval();
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const canvasClient = useRef<CanvasClient | null>(null);
@@ -66,7 +65,7 @@ function BlinkCard() {
   if (error) {
     return <div>Error: {error}</div>;
   }
-  
+
   return (
         <div
             ref={containerRef}
@@ -78,7 +77,7 @@ function BlinkCard() {
             }}
             className="text-center w-10/12 flex flex-row space-y-4 justify-center items-center"
         >
-            {isRegistryLoaded && action && (
+            {action && (
                 <>
                 <Blink stylePreset="custom" action={action} websiteText={websiteText} />
                 <p className="text-white font-mono">
