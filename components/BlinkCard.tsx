@@ -36,7 +36,7 @@ function BlinkCard() {
       if (containerRef.current) {
         resizeObserver.observe(containerRef.current);
       }
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = new URLSearchParams(window.location.href);
       const actionQuery = urlParams.get('action');
       if (actionQuery) {
         const fetchData = async () => {
