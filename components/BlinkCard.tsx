@@ -59,7 +59,7 @@ function BlinkCard() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-green-500">Loading...</div>;
   }
 
   if (error) {
@@ -81,7 +81,7 @@ function BlinkCard() {
                 <>
                 <Blink stylePreset="custom" action={action} websiteText={websiteText} />
                 <p className="text-white font-mono">
-                    {canvasClient.current ? 'Canvas client initialized' : ''}
+                    {canvasClient.current ? 'Canvas client initialized by DAOxNFT' : ''}
                 </p>
                 </>
             )}
