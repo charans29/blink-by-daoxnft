@@ -9,11 +9,9 @@ body {
 }
 
 .blink.custom {
-  background-color: var(--blink-bg-primary);
-  opacity:1;
-  --blink-button: #42474b;
+  --blink-button: #2a2b2c;
   --blink-button-disabled: #2f3336;
-  --blink-button-hover: #3087da;
+  --blink-button-hover: #4010ba;
   --blink-button-success: #00ae661a;
   --blink-icon-error:  #ff6565;
   --blink-icon-error-hover: #ff7a7a;
@@ -60,8 +58,8 @@ body {
   --blink-shadow-container: 0px 2px 8px 0px rgba(59, 176, 255, 0.42), 0px 1px 48px 0px rgba(29, 155, 240, 0.24);
 
   @apply flex justify-center items-center text-center h-full w-full rounded-[15px];
-  @apply bg-gray-700 bg-opacity-50 bg-clip-padding;
+  @apply bg-zinc-900 bg-opacity-80 bg-clip-padding;
 
   display: inline var(--blink-icon-primary);
-  opacity: 1;
+  opacity: 0.8;
 }
