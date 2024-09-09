@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import '@dialectlabs/blinks/index.css';
 import { Action, Blink, useActionsRegistryInterval } from "@dialectlabs/blinks";
 import { CanvasClient } from "@dscvr-one/canvas-client-sdk";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 function BlinkCard() {
   const [websiteText, setWebsiteText] = useState<string>("");
@@ -37,7 +38,9 @@ function BlinkCard() {
         try {
           const actionUrl = new URL(actionQuery);
           setWebsiteText(actionUrl.hostname);
+          console.log("H__TTT__Ps: ", actionUrl.hostname)
           const fetchedAction = await Action.fetch(actionQuery);
+          console.log('Fetched Action: ', fetchedAction);
           setAction(fetchedAction);
         } catch (fetchError) {
           console.error('Error fetching data:', fetchError);
@@ -65,27 +68,32 @@ function BlinkCard() {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
+  const ErrorComponent: React.FC = () => {
+    return <div>Something went wrong. Please try again later.</div>;
+  };
+  
   return (
-    <div
-      ref={containerRef}
-      style={{
-        maxWidth: '450px',
-        margin: '0 auto',
-        padding: "10px",
-        width: '100%',
-      }}
-      className="text-center w-10/12 flex flex-row space-y-4 justify-center items-center"
-    >
-      {isRegistryLoaded && action && (
-        <>
-          <Blink stylePreset="custom" action={action} websiteText={websiteText} />
-          <p className="text-white font-mono">
-            {canvasClient.current ? 'Canvas client initialized' : ''}
-          </p>
-        </>
-      )}
-    </div>
+    <ErrorBoundary errorComponent={ErrorComponent}>
+        <div
+        ref={containerRef}
+        style={{
+            maxWidth: '450px',
+            margin: '0 auto',
+            padding: "10px",
+            width: '100%',
+        }}
+        className="text-center w-10/12 flex flex-row space-y-4 justify-center items-center"
+        >
+        {isRegistryLoaded && action && (
+            <>
+            <Blink stylePreset="custom" action={action} websiteText={websiteText} />
+            <p className="text-white font-mono">
+                {canvasClient.current ? 'Canvas client initialized' : ''}
+            </p>
+            </>
+        )}
+        </div>
+    </ErrorBoundary>
   );
 }
 
