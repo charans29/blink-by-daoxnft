@@ -29,7 +29,7 @@ function BlinkCard() {
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    const actionQuery = urlParams.get('action');
+    const actionQuery = urlParams.get('action') ?? "https://da0-x-nft.vercel.app/api/join-dao-action?nft_id=28&mbrs=4&frcn=4";
     
     if (actionQuery) {
       const fetchData = async () => {
