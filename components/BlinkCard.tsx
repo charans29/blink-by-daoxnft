@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import '@dialectlabs/blinks/index.css';
-import { Action, Blink } from "@dialectlabs/blinks";
+import { Action, ActionContainer, Blink } from "@dialectlabs/blinks";
 import { CanvasClient } from "@dscvr-one/canvas-client-sdk";
 
 function BlinkCard() {
@@ -79,7 +79,7 @@ function BlinkCard() {
         >
             {action && (
                 <>
-                <Blink stylePreset="custom" action={action} websiteText={websiteText} />
+                <ActionContainer stylePreset="custom" action={action} websiteText={websiteText} />
                 <p className="text-white font-mono">
                     {canvasClient.current ? 'Canvas client initialized by DAOxNFT' : ''}
                 </p>
