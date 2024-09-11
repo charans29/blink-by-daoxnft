@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="dscvr:canvas:version" content="vNext"/>
-        <meta name="og:image" content="/cover.png"></meta>
+        <meta name="og:image" content="https://blink-by-daoxnft.vercel.app/cover.png"></meta>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
