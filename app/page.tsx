@@ -18,7 +18,7 @@ export default function Blink() {
   const canvasClientRef = useRef<CanvasClient | undefined>();
   
   useEffect(() => {
-    if(iframe) {
+    if(isIframe()) {
       canvasClientRef.current = new CanvasClient();
     };
 
