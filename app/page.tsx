@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Action,
   ActionContainer,
+  useActionsRegistryInterval
 } from "@dialectlabs/blinks";
 import '@dialectlabs/blinks/index.css';
 
@@ -16,8 +17,10 @@ export default function Blink() {
   const [websiteText, setWebsiteText] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasClientRef = useRef<CanvasClient | undefined>();
+  const { isRegistryLoaded } = useActionsRegistryInterval();
   
   useEffect(() => {
+    console.log("i____FRAME:", isIframe())
     if(isIframe()) {
       canvasClientRef.current = new CanvasClient();
     };
@@ -67,8 +70,8 @@ export default function Blink() {
   }, []);
 
   const exampleCallbacks = {
-    onActionMount: (action: Action, originalUrl: string, type: "trusted" | "malicious" | "unknown") => {
-      console.log("Action mounted:", action, originalUrl, type);
+    onActionMount: (action: Action, originalUrl: string, actionState: "trusted" | "malicious" | "unknown") => {
+      console.log("Action mounted:", action, originalUrl, actionState);
     },
   };
 
@@ -82,7 +85,7 @@ export default function Blink() {
 
   return (
     <div ref={containerRef} style={containerStyle}>
-      {action && (
+      {isRegistryLoaded && action && (
         <ActionContainer
           action={action}
           websiteUrl={websiteUrl}
