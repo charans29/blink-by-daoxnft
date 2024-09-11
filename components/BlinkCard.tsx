@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react";
 import '@dialectlabs/blinks/index.css';
-import { Action, ActionContainer, Blink } from "@dialectlabs/blinks";
+import { Action, ActionContainer } from "@dialectlabs/blinks";
 import { CanvasClient } from "@dscvr-one/canvas-client-sdk";
 
 function BlinkCard() {
