@@ -1,192 +1,55 @@
-"use client"
-// import React, { useEffect, useRef, useState } from "react";
-// import '@dialectlabs/blinks/index.css';
-// import { Action, ActionContainer } from "@dialectlabs/blinks";
-// import { CanvasClient } from "@dscvr-one/canvas-client-sdk";
-
-// function BlinkCard() {
-//   const [websiteText, setWebsiteText] = useState<string>("");
-//   const [action, setAction] = useState<Action | undefined>(undefined);
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const [error, setError] = useState<string | null>(null);
-//   const containerRef = useRef<HTMLDivElement | null>(null);
-
-//   const canvasClient = useRef<CanvasClient | null>(null);
-
-//   useEffect(() => {
-//     if (window.self !== window.top) {
-//       canvasClient.current = new CanvasClient();
-//     }
-//   }, []);
-
-//   useEffect(() => {
-//     const resizeObserver = new ResizeObserver(() => {
-     
-//     });
-
-//     if (containerRef.current) {
-//       resizeObserver.observe(containerRef.current);
-//     }
-
-//     const urlParams = new URLSearchParams(window.location.search);
-//     const actionQuery = urlParams.get('action') ?? "https://da0-x-nft.vercel.app/api/join-dao-action?nft_id=28&mbrs=4&frcn=4";
-    
-//     if (actionQuery) {
-//       const fetchData = async () => {
-//         try {
-//           const actionUrl = new URL(actionQuery);
-//           setWebsiteText(actionUrl.hostname);
-//           const fetchedAction = await Action.fetch(actionQuery);
-//           console.log("A__X__Ns: ", fetchedAction)
-//           setAction(fetchedAction);
-//         } catch (fetchError) {
-//           console.error('Error fetching data:', fetchError);
-//           setError('Failed to load Blink content.');
-//         } finally {
-//           setLoading(false);
-//         }
-//       };
-//       fetchData();
-//     } else {
-//       setLoading(false);
-//     }
-
-//     return () => {
-//       if (containerRef.current) {
-//         resizeObserver.unobserve(containerRef.current);
-//       }
-//     };
-//   }, []);
-
-//   if (loading) {
-//     return <div className="text-green-500">Loading...</div>;
-//   }
-
-//   if (error) {
-//     return <div className="text-red-500">Error: {error}</div>;
-//   }
-
-//   return (
-//         <div
-//             ref={containerRef}
-//             style={{
-//                 maxWidth: '450px',
-//                 margin: '0 auto',
-//                 padding: "10px",
-//                 width: '100%',
-//             }}
-//             className="text-center w-10/12 flex flex-row space-y-4 justify-center items-center"
-//         >
-//             {action && (
-//                 <>
-//                 <ActionContainer stylePreset="custom" action={action} websiteText={websiteText} />
-//                 <p className="text-white font-mono">
-//                     {canvasClient.current ? 'Canvas client initialized by DAOxNFT' : ''}
-//                 </p>
-//                 </>
-//             )}
-//         </div>
-//   );
-// }
-
-// export default BlinkCard;
-
-
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Action,
-  ActionContainer,
-} from "@dialectlabs/blinks";
+"use client";
+import { Action, Blink, useActionsRegistryInterval } from "@dialectlabs/blinks";
+import { useEffect, useState } from "react";
 import '@dialectlabs/blinks/index.css';
 
-import { CanvasClient } from "@dscvr-one/canvas-client-sdk";
-import { CanvasAdapter, isIframe } from "@/adapter/canvas-adapter";
+function BlinkCard() {
+    const [websiteText, setWebsiteText] = useState<string>("");
+    const [action, setAction] = useState<Action | undefined>();
+    const { isRegistryLoaded } = useActionsRegistryInterval();
 
-const BlinkCard = () => {
-  const [action, setAction] = useState<Action | null>(null);
-  const [iframe, setIsInIframe] = useState(false);
-  const [websiteUrl, setWebsiteUrl] = useState("");
-  const [websiteText, setWebsiteText] = useState("");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasClientRef = useRef<CanvasClient | undefined>();
-  
-  useEffect(() => {
-    if(iframe) {
-      canvasClientRef.current = new CanvasClient();
-    };
-
-    setIsInIframe(isIframe());
-    const adapter = iframe ? new CanvasAdapter() : undefined;
-
-    const fetchAction = async () => {
-      const url = new URL(window.location.href);
-      
-      const actionParam = url.searchParams.get('action') ?? "https://da0-x-nft.vercel.app/api/join-dao-action?nft_id=20&mbrs=4&frcn=4";
-      
-      if (actionParam) {
+    const isIframe = () => {
         try {
-          const actionUrl = new URL(actionParam);
-          
-          setWebsiteUrl(actionUrl.toString());
-          setWebsiteText(actionUrl.host);
-
-          const action = await Action.fetch(
-            actionParam,
-            adapter
-          );
-          setAction(action);
-        } catch (error) {
-          console.error("Invalid action URL:", error);
+          return window.self !== window.top;
+        } catch (e) {
+          return true;
         }
-      } else {
-        console.error("No action parameter provided in URL");
-      }
     };
-    fetchAction();
 
-    const resizeObserver = new ResizeObserver(() => {
-      canvasClientRef?.current?.resize();
-    });
+    useEffect(() => {
+        if (typeof window !== 'undefined' || isIframe()) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const actionQuery = urlParams.get('action') ?? "https://da0-x-nft.vercel.app/api/join-dao-action?nft_id=28&mbrs=1&frcn=33";
+            if (actionQuery) {
+                const fetchData = async () => {
+                    try {
+                        const actionUrl = new URL(actionQuery);
+                        setWebsiteText(actionUrl.hostname);
+                        const action = await Action.fetch(actionQuery);
+                        setAction(action);
+                    } catch (error) {
+                        console.error('Error fetching data:', error);
+                    }
+                };
+                fetchData();
+            }
+        }
+    }, []);
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
-      }
-    };
-  }, []);
-
-  const exampleCallbacks = {
-    onActionMount: (action: Action, originalUrl: string, type: "trusted" | "malicious" | "unknown") => {
-      console.log("Action mounted:", action, originalUrl, type);
-    },
-  };
-
-  const exampleSecurityLevel = "only-trusted";
-
-  const containerStyle = {
-    maxWidth: '450px',
-    margin: '0 auto',
-    width: '100%'
-  };
-
-  return (
-    <div ref={containerRef} style={containerStyle}>
-      {action && (
-        <ActionContainer
-          action={action}
-          websiteUrl={websiteUrl}
-          websiteText={websiteText}
-          callbacks={exampleCallbacks}
-          securityLevel={exampleSecurityLevel}
-          stylePreset="custom"
-        />
-      )}
-    </div>
-  );
-};
+    return (
+        <div style={{
+            maxWidth: '450px',
+            margin: '0 auto',
+            padding: "10px",
+            width: '100%'
+        }}>
+            {isRegistryLoaded && action && (
+                <>
+                    <Blink stylePreset='custom' action={action} websiteText={websiteText} />
+                </>
+            )}
+        </div>
+    );
+}
 
 export default BlinkCard;
