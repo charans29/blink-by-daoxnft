@@ -28,7 +28,7 @@ Through Deployed Application, Access the live application by visiting:
 https://blink-by-daoxnft.vercel.app/?action=YOUR_SOLANA_ACTION
 ```
 
-<u>NOTE</u>: YOUR_SOLANA_ACTION should be encoded URL, for ex as follows
+<ins>NOTE</ins>: YOUR_SOLANA_ACTION should be encoded URL, for ex as follows
 
 ```bash
 https://blink-by-daoxnft.vercel.app/?action=https%3A%2F%2Fda0-x-nft.vercel.app%2Fapi%2Fjoin-dao-action%3Fnft_id%3D7%26mbrs%3D4%26frcn%3D4
